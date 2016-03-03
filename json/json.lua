@@ -394,6 +394,8 @@ function isArray(t)
   -- (with the possible exception of 'n')
   if (t == json.EMPTY_ARRAY) then return true, 0 end
   if (t == json.EMPTY_OBJECT) then return false end
+  -- by default empty objects should be json object
+  if next (t) == nill then return false end
   
   local maxIndex = 0
   for k,v in pairs(t) do

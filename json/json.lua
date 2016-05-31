@@ -85,7 +85,7 @@ function json.encode (v)
   if vtype=='table' then
     local rval = {}
     -- Consider arrays separately
-    local bArray, maxCount = isArray(v)
+    local bArray, maxCount = json.isArray(v)
     if bArray then
       for i = 1,maxCount do
         table.insert(rval, json.encode(v[i]))
@@ -389,18 +389,19 @@ end
 -- @return boolean, number True if the table can be represented as an array, false otherwise. If true,
 -- the second returned value is the maximum
 -- number of indexed elements in the array. 
-function isArray(t)
+function json.isArray(t)
   -- Next we count all the elements, ensuring that any non-indexed elements are not-encodable 
   -- (with the possible exception of 'n')
   if (t == json.EMPTY_ARRAY) then return true, 0 end
   if (t == json.EMPTY_OBJECT) then return false end
   -- by default empty objects should be json object
+  if (type(t)~='table') then return false end
   if next (t) == nil then return false end
   
   local maxIndex = 0
   for k,v in pairs(t) do
-    if (type(k)=='number' and math.floor(k)==k and 1<=k) then	-- k,v is an indexed pair
-      if (not isEncodable(v)) then return false end	-- All array elements must be encodable
+    if (type(k)=='number' and math.floor(k)==k and 1<=k) then  -- k,v is an indexed pair
+      if (not isEncodable(v)) then return false end    -- All array elements must be encodable
       maxIndex = math.max(maxIndex,k)
     else
       if (k=='n') then

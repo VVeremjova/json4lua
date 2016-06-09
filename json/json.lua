@@ -396,7 +396,7 @@ function json.isArray(t)
   if (t == json.EMPTY_OBJECT) then return false end
   -- by default empty objects should be json object
   if (type(t)~='table') then return false end
-  if next (t) == nil then return false end
+  if next (t) == nil then return true, 0 end
   
   local maxIndex = 0
   for k,v in pairs(t) do
